@@ -1,4 +1,5 @@
 import { createRound, contestantDecision, finalOutcome, roundWinner } from './game-logic.mjs';
+import { SELECTION_SCENE, SCENE_DURATION_MS, SCORE_DURATION_MS, nextScene, selectionImage, selectionSpeech } from './playback.mjs';
 
 export const dialogue = {
   monty: [
@@ -42,11 +43,12 @@ let index = 0;
 let paused = false;
 let timer;
 let deadline;
-let remaining = 2000;
+let remaining = SCENE_DURATION_MS;
 let selectedDoor = 2;
 let round;
 
 function currentText() {
+  if (index === SELECTION_SCENE) return selectionSpeech(selectedDoor);
   if (index === 9) return 'Sorry about that...';
   if (index === 8) return finalOutcome(contestant.value, round).won
     ? 'Congratulations!'
@@ -76,6 +78,20 @@ function newRound() {
 }
 
 function fitBalloon(text) {
+  const bubble = document.querySelector('#bubble');
+  const speech = document.querySelector('#speech');
+  if (index === SELECTION_SCENE) {
+    // Preserve the approved illustrated balloon and tail. Cover its sample
+    // lettering with a live text layer so the announcement matches this round.
+    bubble.setAttribute('d', 'M 148 95 H 768 V 195 H 148 Z');
+    bubble.setAttribute('stroke', 'none');
+    document.querySelector('#thought-trail').replaceChildren();
+    speech.textContent = text;
+    Object.assign(speech.style, { left: '14.8%', top: '9.5%', width: '62%', height: '10%', fontSize: '7.5cqw' });
+    return;
+  }
+  bubble.setAttribute('stroke', '#17131a');
+  speech.style.fontSize = '';
   // Measure in the SVG's 1000-unit space so layout scales with the square.
   const context = document.createElement('canvas').getContext('2d');
   const fontSize = host.value === 'haunty' ? 35 : 38;
@@ -126,7 +142,6 @@ function fitBalloon(text) {
       trail.append(circle);
     }
   }
-  const speech = document.querySelector('#speech');
   speech.textContent = lines.join('\n');
   Object.assign(speech.style, {
     left: `${left / 10}%`, top: `${top / 10}%`,
@@ -137,7 +152,7 @@ function fitBalloon(text) {
 function schedule() {
   clearTimeout(timer);
   if (displayMode && isFinished()) {
-    timer = setTimeout(showScores, 2000);
+    timer = setTimeout(showScores, SCENE_DURATION_MS);
     return;
   }
   if (!paused && !isFinished()) {
@@ -165,24 +180,27 @@ function showScores() {
   document.querySelector('#host-wins').textContent = totals.host;
   document.querySelector('#nobody-wins').textContent = totals.nobody;
   document.querySelector('#scores').hidden = false;
-  timer = setTimeout(restart, 5000);
+  timer = setTimeout(restart, SCORE_DURATION_MS);
 }
 function advance() {
-  index = index === 5 && round.prize === 'car' ? 9 : index + 1;
-  remaining = 2000;
+  index = nextScene(index, round.prize);
+  remaining = SCENE_DURATION_MS;
   render();
 }
 function render() {
   const key = `${host.value}-${contestant.value}`;
+  const selecting = index === SELECTION_SCENE;
   const thinking = index >= 3 && index < 5;
-  const revealed = index >= 5;
+  const revealed = index >= 5 && !selecting;
   const reaction = index === 9 ? 'lose' : index === 8 ? (finalOutcome(contestant.value, round).won ? 'win' : 'lose') : '';
-  const filename = reaction ? `${contestant.value}-${reaction}-stage-v1.png`
+  const filename = selecting ? selectionImage(host.value, contestant.value)
+    : reaction ? `${contestant.value}-${reaction}-stage-v1.png`
     : revealed ? `${contestant.value}-stage-v1.png` : thinking ? `${key}-turn-v1.png` : images[key];
   const art = document.querySelector('#art');
   const source = `assets/${revealed ? 'reveal' : 'concepts'}/${filename}`;
   if (art.getAttribute('src') !== source) art.src = source;
   art.alt = revealed ? `Host opened door ${round.openedDoor}, revealing a ${round.prize}. Selected door ${selectedDoor} remains closed.` : thinking ? `Host turning toward three closed doors. Door ${selectedDoor} is selected.` : 'Host facing the contestant with three closed prize doors behind him';
+  if (selecting) art.alt = `View from behind the host: ${contestant.value === 'female' ? 'female' : 'male'} superhero contestant faces the camera and points above the host's head, choosing Door ${selectedDoor}.`;
   const glow = document.querySelector('#door-glow');
   glow.hidden = !thinking && !revealed;
   const activeDoor = index === 7 || index === 8 ? contestantDecision(contestant.value, round) : selectedDoor;
@@ -220,7 +238,9 @@ function render() {
     art.alt = `Host has opened the contestant's final door ${result.finalDoor}, revealing a ${result.prize}. The contestant is ${result.won ? 'jumping for joy' : 'slumped on the floor in frustration'}. The first goat remains behind door ${round.openedDoor}.`;
   }
   if (index === 9) art.alt = `Haunty accidentally revealed the car behind Door ${round.openedDoor}. The contestant is slumped on the floor in frustration while Haunty faces them and apologizes. Original Door ${selectedDoor} stays closed.`;
-  document.querySelector('#progress').textContent = index === 9
+  document.querySelector('#progress').textContent = selecting
+    ? `Contestant selects Door ${selectedDoor}`
+    : index === 9
     ? `Haunty revealed the car behind Door ${round.openedDoor} · Contestant loses`
     : index === 8
     ? `Final Door ${result.finalDoor}: ${result.prize === 'car' ? 'a car — contestant wins' : 'a goat — contestant loses'}`
@@ -243,7 +263,7 @@ function render() {
 function restart() {
   clearTimeout(timer);
   document.querySelector('#scores').hidden = true;
-  index = 0; paused = false; remaining = 2000;
+  index = 0; paused = false; remaining = SCENE_DURATION_MS;
   newRound();
   document.querySelector('#art').src = `assets/concepts/${images[`${host.value}-${contestant.value}`]}`;
   document.querySelector('.scene').dataset.host = host.value;
@@ -262,7 +282,8 @@ host.addEventListener('change', restart);
 contestant.addEventListener('change', restart);
 function changeRound() {
   newRound();
-  if (index >= 6 && round.prize === 'car') index = 5;
+  if (index >= 6 && ![9, SELECTION_SCENE].includes(index) && round.prize === 'car') index = 5;
+  if (index === 9 && round.prize === 'car') index = 5;
   if (index === 9 && round.prize === 'goat') index = 5;
   if (!paused && !isFinished()) remaining = Math.max(0, deadline - performance.now());
   render();
@@ -270,11 +291,11 @@ function changeRound() {
 door.addEventListener('change', changeRound);
 carControl.addEventListener('change', changeRound);
 document.querySelector('#open-door').addEventListener('click', () => {
-  index = 5; paused = false; remaining = 2000; render();
+  index = 5; paused = false; remaining = SCENE_DURATION_MS; render();
 });
 document.querySelector('#switch-question').addEventListener('click', () => {
   if (round.prize !== 'goat') return;
-  index = 6; paused = false; remaining = 2000; render();
+  index = 6; paused = false; remaining = SCENE_DURATION_MS; render();
 });
 document.querySelector('#final-reveal').addEventListener('click', () => {
   if (round.prize !== 'goat') return;
@@ -285,7 +306,10 @@ document.querySelector('#apology').addEventListener('click', () => {
   index = 9; render();
 });
 document.querySelector('#thoughts').addEventListener('click', () => {
-  index = 3; paused = false; remaining = 2000; render();
+  index = 3; paused = false; remaining = SCENE_DURATION_MS; render();
+});
+document.querySelector('#selection').addEventListener('click', () => {
+  index = SELECTION_SCENE; paused = false; remaining = SCENE_DURATION_MS; render();
 });
 document.querySelector('#replay').addEventListener('click', restart);
 document.querySelector('#next').addEventListener('click', () => {

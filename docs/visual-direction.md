@@ -12,7 +12,7 @@ Host concept: cheerful middle-aged man with wavy silver hair, round face, small 
 
 ## Later implementation requirements
 
-Four fixed pairings: Monty/Wonder Woman, Monty/Superman, Haunty/Wonder Woman, Haunty/Superman. Wonder Woman always switches; Superman always stays. Monty knows the prizes and always reveals an unchosen goat. Haunty does not know and opens a random unchosen door. An early car reveal ends the round as a contestant loss. Prize location and initial contestant choice are random each round. No sound. Speech balloons use tails; thought balloons use small bubbles. Results remain for five seconds before the next round with the same pairing. Count games, contestant wins/losses, and host wins/losses. The precise meaning of host win/loss remains to be settled before implementation.
+Four fixed pairings: Monty/Wonder Woman, Monty/Superman, Haunty/Wonder Woman, Haunty/Superman. Wonder Woman always switches; Superman always stays. Monty knows the prizes and always reveals an unchosen goat. Haunty does not know and opens a random unchosen door. An early car reveal ends the round as a contestant loss. Prize location and initial contestant choice are random each round. No sound. Speech balloons use tails; thought balloons use small bubbles. Results remain for six seconds before the next round with the same pairing. Count games, contestant wins, named-host wins, and nobody wins. The host wins only on an initial car reveal; Monty never wins. All other scenes last three seconds.
 
 Initial assets are concept stills, not layered animation-ready character rigs. Review character appearance, stage design, and camera framing first.
 
