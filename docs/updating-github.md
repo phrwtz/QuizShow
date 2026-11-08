@@ -10,6 +10,7 @@ python3 scripts/prepare-pages.py
 node game-logic.test.mjs
 node playback.test.mjs
 node tally.test.mjs
+node timeline.test.mjs
 git add .
 git commit -m "Describe the change"
 git push

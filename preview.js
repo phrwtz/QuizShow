@@ -2,6 +2,7 @@ import { createRound, contestantDecision, finalOutcome, roundWinner } from './ga
 import { SELECTION_SCENE, SCENE_DURATION_MS, SCORE_DURATION_MS, nextScene, selectionImage, selectionSpeech } from './playback.mjs';
 import { displayCopy } from './text-content.mjs';
 import { createTally } from './tally.mjs';
+import { createTimeline } from './timeline.mjs';
 
 export const dialogue = {
   monty: [
@@ -50,6 +51,33 @@ let selectedDoor = 2;
 let round;
 // Each page/variant invocation owns an independent, in-memory tally.
 const tally = createTally();
+const timeline = createTimeline();
+let catchingUp = false;
+let renderingOnly = false;
+let showingScores = false;
+
+function armDisplayTimer() {
+  clearTimeout(timer);
+  const delay = timeline.delay();
+  if (delay !== null) timer = setTimeout(wakeDisplay, delay);
+}
+function scheduleDisplay(action, duration) {
+  timeline.schedule(action, duration);
+  if (!catchingUp) armDisplayTimer();
+}
+function wakeDisplay() {
+  if (!displayMode) return;
+  catchingUp = true;
+  try { timeline.tick(); }
+  finally { catchingUp = false; }
+  renderingOnly = true;
+  try {
+    render();
+    renderTotals(tally.snapshot());
+    document.querySelector('#scores').hidden = !showingScores;
+  } finally { renderingOnly = false; }
+  armDisplayTimer();
+}
 
 function fitDisplayCopy() {
   if (!displayMode) return;
@@ -178,8 +206,8 @@ function fitBalloon(text) {
 
 function schedule() {
   clearTimeout(timer);
-  if (displayMode && isFinished()) {
-    timer = setTimeout(showScores, SCENE_DURATION_MS);
+  if (displayMode) {
+    scheduleDisplay(isFinished() ? showScores : advance, SCENE_DURATION_MS);
     return;
   }
   if (!paused && !isFinished()) {
@@ -189,9 +217,12 @@ function schedule() {
 }
 function showScores() {
   const totals = tally.record(round, roundWinner(contestant.value, round));
-  renderTotals(totals);
-  document.querySelector('#scores').hidden = false;
-  timer = setTimeout(restart, SCORE_DURATION_MS);
+  showingScores = true;
+  if (!catchingUp) {
+    renderTotals(totals);
+    document.querySelector('#scores').hidden = false;
+  }
+  scheduleDisplay(restart, SCORE_DURATION_MS);
 }
 function renderTotals(totals) {
   document.querySelector('#games-played').textContent = totals.games;
@@ -206,6 +237,7 @@ function advance() {
   render();
 }
 function render() {
+  if (catchingUp) { schedule(); return; }
   const key = `${host.value}-${contestant.value}`;
   const selecting = index === SELECTION_SCENE;
   const thinking = index >= 3 && index < 5;
@@ -276,13 +308,15 @@ function render() {
   document.querySelector('#switch-question').disabled = round.prize !== 'goat';
   document.querySelector('#final-reveal').disabled = round.prize !== 'goat';
   document.querySelector('#apology').disabled = host.value !== 'haunty' || round.prize !== 'car';
-  schedule();
+  if (!renderingOnly) schedule();
 }
 function restart() {
   clearTimeout(timer);
-  document.querySelector('#scores').hidden = true;
+  showingScores = false;
   index = 0; paused = false; remaining = SCENE_DURATION_MS;
   newRound();
+  if (catchingUp) { schedule(); return; }
+  document.querySelector('#scores').hidden = true;
   document.querySelector('#game-intro').textContent = displayCopy.intro;
   document.querySelector('#variant-description').textContent = displayCopy.variants[`${host.value}-${contestant.value}`];
   fitDisplayCopy();
@@ -300,6 +334,7 @@ function restart() {
   render();
 }
 function startVariant() {
+  timeline.stop();
   if (displayMode) {
     host.value = fixedHost;
     contestant.value = fixedContestant;
@@ -353,7 +388,9 @@ document.querySelector('#pause').addEventListener('click', () => {
 startVariant();
 // Back/Forward navigation can restore a document without re-running its modules.
 window.addEventListener('pageshow', event => { if (event.persisted) startVariant(); });
-window.addEventListener('pagehide', () => clearTimeout(timer));
+window.addEventListener('pagehide', () => { clearTimeout(timer); timeline.stop(); });
+document.addEventListener('visibilitychange', wakeDisplay);
+window.addEventListener('focus', wakeDisplay);
 new ResizeObserver(() => { if (balloonVisible()) fitBalloon(currentText()); })
   .observe(document.querySelector('.scene'));
 new ResizeObserver(fitDisplayCopy).observe(document.querySelector('aside'));

@@ -41,3 +41,9 @@ Preview Haunty’s apology is available only when Haunty’s first reveal is the
 Explanatory copy is maintained in `text-content.json`. Run `python3 scripts/prepare-pages.py` after editing it to regenerate the shared text module and all four fixed pages.
 
 `node tally.test.mjs` checks independent variant totals, reset behavior, and duplicate-round protection. The page preparation script emits `display-runtime.mjs` and versioned script/style URLs so published pages load matching current code rather than an older cached script. The root review page continues to use the source modules directly.
+
+## Background tabs
+
+Display playback is scheduled against elapsed wall time. Delayed background timers process missed scene transitions and completed games, preserving three-second scenes and six-second results. Switching back to a tab reconciles it to the current scene and totals immediately. Completely suspended browser tabs cannot execute JavaScript until resumed; elapsed games are calculated on resume. A discarded/reloaded page is a new invocation and starts its counters at zero.
+
+Run `node timeline.test.mjs` to compare an hour of uninterrupted playback against an hour with no timer callbacks for all four variants, including longer suspension across multiple bounded catch-up batches.
