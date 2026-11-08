@@ -11,7 +11,7 @@ Four silent, automatically repeating display versions share the same code and ar
 
 The square scene uses the shorter viewport dimension. The text area is to its left in landscape and above it in portrait, with a centered title and left-aligned introductory and variant paragraphs. Text scales to fit the available area. Display versions hide review controls and ignore pairing query parameters.
 
-After each result, a six-second results screen shows games played, Contestant wins, the named host’s wins, and Nobody wins, then a new random round starts. Each browser tab starts all four counts at zero and accumulates them only in page memory while it runs. Refreshing the tab resets Games played, Contestant wins, Host wins, and Nobody wins to zero. The contestant wins by receiving the car. The host wins only by revealing the car on the first opening, which can happen only to Haunty. Nobody wins when the final chosen door reveals a goat. Monty’s win count is always zero. Previously saved browser totals are ignored. Tabs do not share counts, including two tabs running the same pairing.
+After each result, a six-second results screen shows games played, Contestant wins, the named host’s wins, and Nobody wins, then a new random round starts. Each browser tab starts all four counts at zero and accumulates them only in page memory while it runs. Opening or refreshing a variant resets Games played, Contestant wins, Host wins, and Nobody wins to zero. Returning with the browser’s Back or Forward buttons also starts that variant from zero. Only automatic rounds within the same invocation retain its tally. The contestant wins by receiving the car. The host wins only by revealing the car on the first opening, which can happen only to Haunty. Nobody wins when the final chosen door reveals a goat. Monty’s win count is always zero. Previously saved browser totals are ignored. Tabs do not share counts, including two tabs running the same pairing.
 
 ## GitHub Pages
 
@@ -39,3 +39,5 @@ Reaction artwork and the built-in image-generation prompts are saved in `assets/
 Preview Haunty’s apology is available only when Haunty’s first reveal is the car. Both contestants use their losing pose, the accidentally revealed car remains visible, and no switch or second door opening occurs. The apology sprite and generation prompt are saved in `assets/reveal/haunty-apology-v1.png` and `assets/reveal/apology-prompt.md`.
 
 Explanatory copy is maintained in `text-content.json`. Run `python3 scripts/prepare-pages.py` after editing it to regenerate the shared text module and all four fixed pages.
+
+`node tally.test.mjs` checks independent variant totals, reset behavior, and duplicate-round protection. The page preparation script emits `display-runtime.mjs` and versioned script/style URLs so published pages load matching current code rather than an older cached script. The root review page continues to use the source modules directly.

@@ -1,6 +1,7 @@
 import { createRound, contestantDecision, finalOutcome, roundWinner } from './game-logic.mjs';
 import { SELECTION_SCENE, SCENE_DURATION_MS, SCORE_DURATION_MS, nextScene, selectionImage, selectionSpeech } from './playback.mjs';
 import { displayCopy } from './text-content.mjs';
+import { createTally } from './tally.mjs';
 
 export const dialogue = {
   monty: [
@@ -47,9 +48,8 @@ let deadline;
 let remaining = SCENE_DURATION_MS;
 let selectedDoor = 2;
 let round;
-// Page-memory only: a reload creates a fresh tally for this tab.
-const totals = { games: 0, contestant: 0, host: 0, nobody: 0 };
-let roundCounted = false;
+// Each page/variant invocation owns an independent, in-memory tally.
+const tally = createTally();
 
 function fitDisplayCopy() {
   if (!displayMode) return;
@@ -95,7 +95,6 @@ function isFinished() {
 }
 
 function newRound() {
-  roundCounted = false;
   selectedDoor = door.value === 'random' ? 1 + Math.floor(Math.random() * 3) : Number(door.value);
   const car = carControl.value === 'random' ? 1 + Math.floor(Math.random() * 3) : Number(carControl.value);
   round = createRound(host.value, selectedDoor, car);
@@ -185,18 +184,17 @@ function schedule() {
   }
 }
 function showScores() {
-  if (!roundCounted) {
-    totals.games++;
-    totals[roundWinner(contestant.value, round)]++;
-    roundCounted = true;
-  }
+  const totals = tally.record(round, roundWinner(contestant.value, round));
+  renderTotals(totals);
+  document.querySelector('#scores').hidden = false;
+  timer = setTimeout(restart, SCORE_DURATION_MS);
+}
+function renderTotals(totals) {
   document.querySelector('#games-played').textContent = totals.games;
   document.querySelector('#contestant-wins').textContent = totals.contestant;
   document.querySelector('#host-name').textContent = fixedHost === 'monty' ? 'Monty Hall wins' : 'Haunty Mall wins';
   document.querySelector('#host-wins').textContent = totals.host;
   document.querySelector('#nobody-wins').textContent = totals.nobody;
-  document.querySelector('#scores').hidden = false;
-  timer = setTimeout(restart, SCORE_DURATION_MS);
 }
 function advance() {
   index = nextScene(index, round.prize);
@@ -297,8 +295,16 @@ function restart() {
   history.replaceState(null, '', url);
   render();
 }
-host.addEventListener('change', restart);
-contestant.addEventListener('change', restart);
+function startVariant() {
+  if (displayMode) {
+    host.value = fixedHost;
+    contestant.value = fixedContestant;
+  }
+  renderTotals(tally.reset());
+  restart();
+}
+host.addEventListener('change', startVariant);
+contestant.addEventListener('change', startVariant);
 function changeRound() {
   newRound();
   if (index >= 6 && ![9, SELECTION_SCENE].includes(index) && round.prize === 'car') index = 5;
@@ -340,7 +346,10 @@ document.querySelector('#pause').addEventListener('click', () => {
   paused = !paused;
   render();
 });
-restart();
+startVariant();
+// Back/Forward navigation can restore a document without re-running its modules.
+window.addEventListener('pageshow', event => { if (event.persisted) startVariant(); });
+window.addEventListener('pagehide', () => clearTimeout(timer));
 new ResizeObserver(() => { if (balloonVisible()) fitBalloon(currentText()); })
   .observe(document.querySelector('.scene'));
 new ResizeObserver(fitDisplayCopy).observe(document.querySelector('aside'));
