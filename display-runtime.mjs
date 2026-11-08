@@ -46,7 +46,7 @@ export function selectionImage(host, contestant) {
 }
 
 export function selectionSpeech(door) {
-  return `I want Room ${door}!`;
+  return `I want Door ${door}!`;
 }
 
 export function nextScene(index, firstPrize) {

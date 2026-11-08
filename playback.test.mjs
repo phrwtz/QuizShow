@@ -18,7 +18,7 @@ for (const prize of ['goat', 'car']) {
 for (const host of ['monty', 'haunty']) {
   for (const contestant of ['female', 'male']) {
     assert.ok(existsSync(new URL(`./assets/concepts/${selectionImage(host, contestant)}`, import.meta.url)));
-    for (const door of [1, 2, 3]) assert.equal(selectionSpeech(door), `I want Room ${door}!`);
+    for (const door of [1, 2, 3]) assert.equal(selectionSpeech(door), `I want Door ${door}!`);
   }
 }
 console.log('Selection scene appears after the invitation and before host thoughts in both branches; all four artwork pairings exist.');
