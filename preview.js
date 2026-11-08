@@ -1,5 +1,6 @@
 import { createRound, contestantDecision, finalOutcome, roundWinner } from './game-logic.mjs';
 import { SELECTION_SCENE, SCENE_DURATION_MS, SCORE_DURATION_MS, nextScene, selectionImage, selectionSpeech } from './playback.mjs';
+import { displayCopy } from './text-content.mjs';
 
 export const dialogue = {
   monty: [
@@ -49,6 +50,25 @@ let round;
 // Page-memory only: a reload creates a fresh tally for this tab.
 const totals = { games: 0, contestant: 0, host: 0, nobody: 0 };
 let roundCounted = false;
+
+function fitDisplayCopy() {
+  if (!displayMode) return;
+  const panel = document.querySelector('aside');
+  const copy = document.querySelector('.display-copy');
+  const style = getComputedStyle(panel);
+  const height = panel.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+  const width = panel.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  if (height <= 0 || width <= 0) return;
+  let low = 1;
+  let high = Math.min(128, width / 9, height / 5);
+  for (let step = 0; step < 12; step++) {
+    const size = (low + high) / 2;
+    copy.style.fontSize = `${size}px`;
+    if (copy.scrollHeight <= height && copy.scrollWidth <= width) low = size;
+    else high = size;
+  }
+  copy.style.fontSize = `${Math.floor(low * 10) / 10}px`;
+}
 
 function currentText() {
   if (index === SELECTION_SCENE) return selectionSpeech(selectedDoor);
@@ -261,6 +281,9 @@ function restart() {
   document.querySelector('#scores').hidden = true;
   index = 0; paused = false; remaining = SCENE_DURATION_MS;
   newRound();
+  document.querySelector('#game-intro').textContent = displayCopy.intro;
+  document.querySelector('#variant-description').textContent = displayCopy.variants[`${host.value}-${contestant.value}`];
+  fitDisplayCopy();
   document.querySelector('#art').src = `assets/concepts/${images[`${host.value}-${contestant.value}`]}`;
   document.querySelector('.scene').dataset.host = host.value;
   const url = new URL(location.href);
@@ -320,3 +343,4 @@ document.querySelector('#pause').addEventListener('click', () => {
 restart();
 new ResizeObserver(() => { if (balloonVisible()) fitBalloon(currentText()); })
   .observe(document.querySelector('.scene'));
+new ResizeObserver(fitDisplayCopy).observe(document.querySelector('aside'));

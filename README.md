@@ -9,7 +9,7 @@ Four silent, automatically repeating display versions share the same code and ar
 | Haunty / Switch | Haunty Mall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Haunty/Switch/ |
 | Haunty / NoSwitch | Haunty Mall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Haunty/NoSwitch/ |
 
-The square scene uses the shorter viewport dimension. The reserved text area is to its left in landscape and above it in portrait. Display versions hide review controls and ignore pairing query parameters.
+The square scene uses the shorter viewport dimension. The text area is to its left in landscape and above it in portrait, with a centered title and left-aligned introductory and variant paragraphs. Text scales to fit the available area. Display versions hide review controls and ignore pairing query parameters.
 
 After each result, a six-second results screen shows games played, Contestant wins, the named host’s wins, and Nobody wins, then a new random round starts. Each browser tab starts all four counts at zero and accumulates them only in page memory while it runs. Refreshing the tab resets Games played, Contestant wins, Host wins, and Nobody wins to zero. The contestant wins by receiving the car. The host wins only by revealing the car on the first opening, which can happen only to Haunty. Nobody wins when the final chosen door reveals a goat. Monty’s win count is always zero. Previously saved browser totals are ignored. Tabs do not share counts, including two tabs running the same pairing.
 
@@ -37,3 +37,5 @@ Door logic is in `game-logic.mjs`; run `node game-logic.test.mjs` to verify all 
 Reaction artwork and the built-in image-generation prompts are saved in `assets/reveal/reaction-prompts.md`. Both reaction poses for each contestant were reviewed in the browser.
 
 Preview Haunty’s apology is available only when Haunty’s first reveal is the car. Both contestants use their losing pose, the accidentally revealed car remains visible, and no switch or second door opening occurs. The apology sprite and generation prompt are saved in `assets/reveal/haunty-apology-v1.png` and `assets/reveal/apology-prompt.md`.
+
+Explanatory copy is maintained in `text-content.json`. Run `python3 scripts/prepare-pages.py` after editing it to regenerate the shared text module and all four fixed pages.
