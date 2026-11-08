@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="../../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Let's Win a Car — Haunty / NoSwitch</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body data-fixed-host="haunty" data-fixed-contestant="male">
+  <main class="scene" aria-label="Game show opening scene">
+    <img id="art" alt="Host facing the contestant with three closed prize doors behind him">
+    <div id="door-glow" hidden aria-label="Selected door"></div>
+    <div id="reveal" hidden>
+      <div id="prize-bay" class="prize-bay"><img id="prize" alt=""></div>
+      <div id="opened-panel" class="opened-panel"><span id="opened-number"></span><i></i></div>
+      <div id="final-door" hidden>
+        <div class="prize-bay"><img id="final-prize" alt=""></div>
+        <div class="opened-panel"><span id="final-number"></span><i></i></div>
+      </div>
+      <img id="opening-host" alt="Host holding the opened door">
+      <img id="foreground-contestant" alt="" aria-hidden="true">
+    </div>
+    <div class="balloon" role="status" aria-live="polite">
+      <svg viewBox="0 0 1000 1000" aria-hidden="true">
+        <path id="bubble" fill="white" stroke="#17131a" stroke-width="4" stroke-linejoin="round"/>
+        <g id="thought-trail" fill="white" stroke="#17131a" stroke-width="3"></g>
+      </svg>
+      <div id="speech"></div>
+    </div>
+    <section id="scores" hidden aria-label="Results so far">
+      <h2>Results so far</h2>
+      <p>Games played: <strong id="games-played">0</strong></p>
+      <table><thead><tr><th></th><th>Won</th><th>Lost</th></tr></thead><tbody>
+        <tr><th>Contestant</th><td id="contestant-wins">0</td><td id="contestant-losses">0</td></tr>
+        <tr><th>Host</th><td id="host-wins">0</td><td id="host-losses">0</td></tr>
+      </tbody></table>
+    </section>
+  </main>
+  <aside>
+    <h1>Let’s Win a Car</h1>
+    <p id="display-condition"></p>
+    <div class="review-controls">
+    <p>Dialogue and host thoughts preview</p>
+    <label>Host <select id="host"><option value="monty">Monty Hall</option><option value="haunty">Haunty Mall</option></select></label>
+    <label>Contestant <select id="contestant"><option value="female">Female superhero</option><option value="male">Male superhero</option></select></label>
+    <label>Selected door <select id="door"><option value="random">Random</option><option value="1">Door 1</option><option value="2">Door 2</option><option value="3">Door 3</option></select></label>
+    <label>Car location <select id="car-door"><option value="random">Random</option><option value="1">Door 1</option><option value="2">Door 2</option><option value="3">Door 3</option></select></label>
+    <p id="progress"></p>
+    <div class="buttons"><button id="replay">Replay</button><button id="pause">Pause</button><button id="next">Next balloon</button></div>
+    <button id="thoughts">Preview host thoughts</button>
+    <button id="open-door">Preview door reveal</button>
+    <button id="switch-question">Preview switch question</button>
+    <button id="final-reveal">Preview final reveal</button>
+    <button id="apology">Preview Haunty’s apology</button>
+    <p class="note">Two seconds per balloon and first reveal. After the reply, the host opens the contestant's final door. If Haunty reveals the car first, his awkward thought is followed by an apology to the losing contestant. The last scene stays visible. No sound.</p>
+    </div>
+  </aside>
+  <script type="module" src="preview.js"></script>
+</body>
+</html>

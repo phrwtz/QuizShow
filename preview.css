@@ -1,0 +1,43 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #131b33; color: #fff; font: 18px/1.4 system-ui, sans-serif; display: flex; min-height: 100dvh; }
+.scene { position: relative; width: min(100vw,100dvh); height: min(100vw,100dvh); flex: none; container-type: inline-size; }
+#art { display: block; width: 100%; height: 100%; }
+#reveal { position: absolute; inset: 0; pointer-events: none; }
+.prize-bay { position: absolute; top: 32.5%; left: var(--door-left); width: 15.2%; height: 31%; border-radius: 50% 50% 0 0 / 24% 24% 0 0; background: radial-gradient(ellipse at 50% 75%,#66657f,#151124 80%); overflow: hidden; box-shadow: inset 0 0 0 2px #38241b; }
+.prize-bay img { position: absolute; width: 96%; height: 75%; object-fit: contain; left: 2%; bottom: 2%; }
+.opened-panel { position: absolute; left: calc(var(--door-left) - 4.5%); top: 32.5%; width: 5%; height: 31%; background: linear-gradient(90deg,#773029,#b54d3d); border: 2px solid #65271f; border-radius: 40% 20% 0 0 / 16% 7% 0 0; transform: skewY(12deg); box-shadow: -3px 3px 8px #17112466; }
+.opened-panel span { position: absolute; top: 16%; width: 100%; text-align: center; color: #ffe8ad; font: bold 5cqw Georgia,serif; }
+.opened-panel i { position: absolute; width: 14%; height: 3%; background: #f9cf70; border-radius: 50%; top: 57%; left: 15%; }
+#opening-host { position: absolute; left: calc(var(--host-door-left, var(--door-left)) - 29%); top: 25%; width: 35%; height: 56%; object-fit: contain; }
+#opening-host.asking { left: 28%; top: 27%; width: 30%; height: 55%; }
+#foreground-contestant { position: absolute; inset: 0; width: 100%; height: 100%; clip-path: polygon(0 27%,18% 26%,23% 29%,23% 37%,21% 42%,25% 45%,28% 52%,25% 58%,23% 61%,22% 78%,26% 91%,26% 97%,3% 97%,1% 92%,3% 80%,3% 64%,0 57%); }
+#foreground-contestant[data-reaction="win"] { clip-path: polygon(3% 19%,7% 19%,9% 27%,12% 31%,14% 26%,20% 24%,23% 26%,24% 29%,27% 19%,31% 19%,31% 24%,27% 39%,24% 45%,26% 56%,28% 66%,23% 72%,17% 78%,11% 77%,9% 71%,5% 69%,3% 64%,4% 59%,7% 60%,12% 64%,12% 55%,10% 50%,2% 50%,0 45%,0 40%,7% 40%,5% 31%); }
+#foreground-contestant[data-reaction="lose"] { clip-path: polygon(14% 53%,25% 52%,31% 56%,31% 64%,28% 71%,29% 80%,33% 86%,32% 94%,24% 97%,0 97%,0 89%,5% 79%,7% 68%,10% 63%,13% 63%); }
+.balloon { position: absolute; inset: 0; pointer-events: none; }
+#door-glow { position: absolute; top: 33%; width: 13.5%; height: 30.2%; border-radius: 48% 48% 3% 3% / 22% 22% 2% 2%; border: 3px solid #fff7aa; background: #fff59a20; box-shadow: 0 0 18px 5px #ffeb78, inset 0 0 15px #fff6a0; animation: chosen-door 1.3s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes chosen-door { to { box-shadow: 0 0 30px 10px #fff4b0, inset 0 0 25px #fff6a0; background: #fff59a40; } }
+@media (prefers-reduced-motion: reduce) { #door-glow { animation: none; } }
+#thoughts { margin-top: 10px; }
+.balloon svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#speech { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; color: #141118; font: 800 3.8cqw/1.16 Arial, sans-serif; padding: 0; white-space: pre; }
+aside { order: -1; flex: 1; min-width: 0; padding: clamp(12px,2vw,36px); align-self: center; }
+.scene[data-host="haunty"] #speech { font-size: 3.5cqw; }
+h1 { font-size: clamp(22px,2.5vw,40px); line-height: 1.1; }
+label { display: block; margin: 16px 0; }
+select,button { font: inherit; padding: 8px; border-radius: 6px; border: 1px solid #a7b4d5; }
+select { display: block; width: 100%; margin-top: 4px; }
+button { cursor: pointer; background: #fff1cd; color: #17131a; }
+.buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.note { font-size: 14px; color: #c7d2ef; }
+@media (max-aspect-ratio: 1/1) { body { flex-direction: column; } aside { align-self: stretch; padding: 16px 24px; } h1 { margin: 0; } label { display: inline-block; width: 45%; margin: 8px 2% 8px 0; } }
+#display-condition:empty { display: none; }
+#scores { position: absolute; inset: 0; background: #131b33; padding: 8%; font-size: 4cqw; text-align: center; }
+#scores h2 { font-size: 6cqw; }
+#scores table { width: 100%; border-collapse: collapse; margin-top: 8%; }
+#scores th, #scores td { padding: 4%; border-bottom: 1px solid #8292ba; }
+body[data-fixed-host] { height: 100dvh; overflow: hidden; }
+body[data-fixed-host] .review-controls { display: none; }
+body[data-fixed-host] aside { align-self: stretch; overflow: hidden; }
+@media (max-aspect-ratio: 1/1) {
+  body[data-fixed-host] aside { flex: none; height: max(0px, calc(100dvh - 100vw)); }
+}

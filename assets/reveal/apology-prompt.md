@@ -1,0 +1,5 @@
+# Haunty apology sprite
+
+Created with built-in image generation, using haunty-asking-v1.png as the character reference. Saved as haunty-apology-v1.png.
+
+Edit this isolated original cartoon host sprite on transparent background. Preserve exact original young adult Haunty Mall identity, tall skinny proportions, brown hair, mustard knitted pompom beanie, oversized plum blazer, pale shirt loose orange tie, charcoal trousers, sneakers, full-body framing and clean outlined cel-shaded style. Change his expression and gesture to a sincere sheepish apology: concerned raised inner eyebrows, small embarrassed closed-mouth smile, shoulders slightly drooped, one palm extended apologetically toward contestant offscreen LEFT, other hand touching back of neck awkwardly. He faces LEFT in three-quarter FRONT view, visibly facing the contestant. No speech balloon or text, no stage, no other characters, genuinely transparent alpha background. Entire hat and both shoes visible. Keep character at same scale and placement as reference.
