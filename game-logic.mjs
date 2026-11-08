@@ -27,3 +27,8 @@ export function finalOutcome(contestant, round) {
   const prize = finalDoor === round.carDoor ? 'car' : 'goat';
   return { finalDoor, prize, won: prize === 'car' };
 }
+
+export function roundWinner(contestant, round) {
+  if (round.openedDoor === round.carDoor) return 'host';
+  return finalOutcome(contestant, round).won ? 'contestant' : 'nobody';
+}

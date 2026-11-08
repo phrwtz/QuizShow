@@ -11,7 +11,7 @@ Four silent, automatically repeating display versions share the same code and ar
 
 The square scene uses the shorter viewport dimension. The reserved text area is to its left in landscape and above it in portrait. Display versions hide review controls and ignore pairing query parameters.
 
-After each result, a five-second results screen shows games played and contestant/host wins and losses, then a new random round starts. Counts persist separately for each pairing in the browser's local storage. A host win means a contestant loss and vice versa. Clearing site data resets counts. Browser windows on separate computers do not share totals.
+After each result, a five-second results screen shows games played, Contestant wins, the named host’s wins, and Nobody wins, then a new random round starts. Counts persist separately for each pairing in the browser's local storage. The contestant wins by receiving the car. The host wins only by revealing the car on the first opening, which can happen only to Haunty. Nobody wins when the final chosen door reveals a goat. Monty’s win count is always zero. Three-outcome totals use a new storage key and start fresh; the old binary totals are preserved but no longer displayed. Clearing site data resets counts. Browser windows on separate computers do not share totals.
 
 ## GitHub Pages
 

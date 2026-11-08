@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createRound, contestantDecision, finalOutcome } from './game-logic.mjs';
+import { createRound, contestantDecision, finalOutcome, roundWinner } from './game-logic.mjs';
 
 for (const host of ['monty', 'haunty']) {
   for (const selected of [1, 2, 3]) {
@@ -10,6 +10,12 @@ for (const host of ['monty', 'haunty']) {
       assert.equal(first.openedDoor, eligible[0]);
       assert.equal(last.openedDoor, eligible.at(-1));
       for (const round of [first, last]) {
+        for (const contestant of ['male', 'female']) {
+          const winner = roundWinner(contestant, round);
+          assert.equal(winner, round.openedDoor === car ? 'host'
+            : contestantDecision(contestant, round) === car ? 'contestant' : 'nobody');
+          if (host === 'monty') assert.notEqual(winner, 'host');
+        }
         assert.notEqual(round.openedDoor, selected);
         assert.equal(round.prize, round.openedDoor === car ? 'car' : 'goat');
         if (host === 'monty') assert.equal(round.prize, 'goat');

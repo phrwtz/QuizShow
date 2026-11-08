@@ -31,9 +31,10 @@
     <section id="scores" hidden aria-label="Results so far">
       <h2>Results so far</h2>
       <p>Games played: <strong id="games-played">0</strong></p>
-      <table><thead><tr><th></th><th>Won</th><th>Lost</th></tr></thead><tbody>
-        <tr><th>Contestant</th><td id="contestant-wins">0</td><td id="contestant-losses">0</td></tr>
-        <tr><th>Host</th><td id="host-wins">0</td><td id="host-losses">0</td></tr>
+      <table><tbody>
+        <tr><th scope="row">Contestant wins</th><td id="contestant-wins">0</td></tr>
+        <tr><th scope="row" id="host-name">Host wins</th><td id="host-wins">0</td></tr>
+        <tr><th scope="row">Nobody wins</th><td id="nobody-wins">0</td></tr>
       </tbody></table>
     </section>
   </main>

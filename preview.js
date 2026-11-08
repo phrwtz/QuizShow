@@ -1,4 +1,4 @@
-import { createRound, contestantDecision, finalOutcome } from './game-logic.mjs';
+import { createRound, contestantDecision, finalOutcome, roundWinner } from './game-logic.mjs';
 
 export const dialogue = {
   monty: [
@@ -146,22 +146,24 @@ function schedule() {
   }
 }
 function showScores() {
-  const key = `QuizShow:results:${fixedHost}:${fixedContestant}`;
-  let totals = { games: 0, wins: 0, losses: 0 };
+  // Old binary totals cannot distinguish a host car reveal from a final goat.
+  // Keep them intact under the old key and start the three-outcome tally anew.
+  const key = `QuizShow:results:v2:${fixedHost}:${fixedContestant}`;
+  let totals = { games: 0, contestant: 0, host: 0, nobody: 0 };
   try {
     const saved = JSON.parse(localStorage.getItem(key));
-    if (saved && ['games', 'wins', 'losses'].every(field => Number.isSafeInteger(saved[field]) && saved[field] >= 0)
-      && saved.games === saved.wins + saved.losses) totals = saved;
+    if (saved && ['games', 'contestant', 'host', 'nobody'].every(field => Number.isSafeInteger(saved[field]) && saved[field] >= 0)
+      && saved.games === saved.contestant + saved.host + saved.nobody
+      && (fixedHost !== 'monty' || saved.host === 0)) totals = saved;
   } catch { /* Displays can run with storage disabled. */ }
   totals.games++;
-  if (index === 8 && finalOutcome(contestant.value, round).won) totals.wins++;
-  else totals.losses++;
+  totals[roundWinner(contestant.value, round)]++;
   try { localStorage.setItem(key, JSON.stringify(totals)); } catch { /* Keep the display running. */ }
   document.querySelector('#games-played').textContent = totals.games;
-  document.querySelector('#contestant-wins').textContent = totals.wins;
-  document.querySelector('#contestant-losses').textContent = totals.losses;
-  document.querySelector('#host-wins').textContent = totals.losses;
-  document.querySelector('#host-losses').textContent = totals.wins;
+  document.querySelector('#contestant-wins').textContent = totals.contestant;
+  document.querySelector('#host-name').textContent = fixedHost === 'monty' ? 'Monty Hall wins' : 'Haunty Mall wins';
+  document.querySelector('#host-wins').textContent = totals.host;
+  document.querySelector('#nobody-wins').textContent = totals.nobody;
   document.querySelector('#scores').hidden = false;
   timer = setTimeout(restart, 5000);
 }
