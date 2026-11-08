@@ -46,6 +46,9 @@ let deadline;
 let remaining = SCENE_DURATION_MS;
 let selectedDoor = 2;
 let round;
+// Page-memory only: a reload creates a fresh tally for this tab.
+const totals = { games: 0, contestant: 0, host: 0, nobody: 0 };
+let roundCounted = false;
 
 function currentText() {
   if (index === SELECTION_SCENE) return selectionSpeech(selectedDoor);
@@ -72,6 +75,7 @@ function isFinished() {
 }
 
 function newRound() {
+  roundCounted = false;
   selectedDoor = door.value === 'random' ? 1 + Math.floor(Math.random() * 3) : Number(door.value);
   const car = carControl.value === 'random' ? 1 + Math.floor(Math.random() * 3) : Number(carControl.value);
   round = createRound(host.value, selectedDoor, car);
@@ -161,19 +165,11 @@ function schedule() {
   }
 }
 function showScores() {
-  // Old binary totals cannot distinguish a host car reveal from a final goat.
-  // Keep them intact under the old key and start the three-outcome tally anew.
-  const key = `QuizShow:results:v2:${fixedHost}:${fixedContestant}`;
-  let totals = { games: 0, contestant: 0, host: 0, nobody: 0 };
-  try {
-    const saved = JSON.parse(localStorage.getItem(key));
-    if (saved && ['games', 'contestant', 'host', 'nobody'].every(field => Number.isSafeInteger(saved[field]) && saved[field] >= 0)
-      && saved.games === saved.contestant + saved.host + saved.nobody
-      && (fixedHost !== 'monty' || saved.host === 0)) totals = saved;
-  } catch { /* Displays can run with storage disabled. */ }
-  totals.games++;
-  totals[roundWinner(contestant.value, round)]++;
-  try { localStorage.setItem(key, JSON.stringify(totals)); } catch { /* Keep the display running. */ }
+  if (!roundCounted) {
+    totals.games++;
+    totals[roundWinner(contestant.value, round)]++;
+    roundCounted = true;
+  }
   document.querySelector('#games-played').textContent = totals.games;
   document.querySelector('#contestant-wins').textContent = totals.contestant;
   document.querySelector('#host-name').textContent = fixedHost === 'monty' ? 'Monty Hall wins' : 'Haunty Mall wins';
