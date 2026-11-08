@@ -56,15 +56,19 @@ function fitDisplayCopy() {
   const panel = document.querySelector('aside');
   const copy = document.querySelector('.display-copy');
   const style = getComputedStyle(panel);
-  const height = panel.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
-  const width = panel.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  const bounds = panel.getBoundingClientRect();
+  const height = bounds.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+  const width = bounds.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
   if (height <= 0 || width <= 0) return;
   let low = 1;
   let high = Math.min(128, width / 9, height / 5);
   for (let step = 0; step < 12; step++) {
     const size = (low + high) / 2;
     copy.style.fontSize = `${size}px`;
-    if (copy.scrollHeight <= height && copy.scrollWidth <= width) low = size;
+    // scrollWidth/Height are rounded to whole pixels. Comparing them with
+    // fractional viewport/padding sizes without tolerance can reject every
+    // font size and collapse the text to one pixel.
+    if (copy.scrollHeight <= Math.ceil(height) && copy.scrollWidth <= Math.ceil(width) + 1) low = size;
     else high = size;
   }
   copy.style.fontSize = `${Math.floor(low * 10) / 10}px`;
