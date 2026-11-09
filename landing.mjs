@@ -8,7 +8,7 @@ export const games = [
 // All opens must happen synchronously inside the button's user gesture.
 // Named tabs and retained handles let a blocked launch be retried without
 // duplicating or reloading games that already opened.
-export function createLauncher(openWindow) {
+export function createLauncher(openWindow, defer = setTimeout) {
   const tabs = new Map();
   function openGame(game) {
     let tab = tabs.get(game.target);
@@ -30,6 +30,9 @@ export function createLauncher(openWindow) {
   function start() {
     const blocked = games.filter(game => !openGame(game));
     focusFirst();
+    // New tabs activate asynchronously in Chrome. Select Version 1 again
+    // after those activation requests have settled, including on a fresh launch.
+    defer(focusFirst, 750);
     return blocked;
   }
   return { start, openGame, focusFirst };

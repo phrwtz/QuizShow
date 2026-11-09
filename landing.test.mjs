@@ -5,6 +5,7 @@ assert.deepEqual(games.map(game => game.name), ['Version 1', 'Version 2', 'Versi
 const calls = [];
 const handles = new Map();
 let block = true;
+const deferred = [];
 const launcher = createLauncher((path, target) => {
   calls.push(path);
   if (path === '') return handles.get(target) || null;
@@ -12,7 +13,7 @@ const launcher = createLauncher((path, target) => {
   const tab = { closed: false, focus: () => calls.push(`focus:${path}`) };
   handles.set(target, tab);
   return tab;
-});
+}, (callback, delay) => deferred.push({ callback, delay }));
 assert.deepEqual(launcher.start(), games.slice(1));
 assert.deepEqual(calls, [...games.map(g => g.path), '', 'focus:Monty/Switch/']);
 block = false;
@@ -27,3 +28,10 @@ calls.length = 0;
 launcher.start();
 assert.deepEqual(calls, ['Haunty/Switch/', '', 'focus:Monty/Switch/']);
 console.log('Launch order, first-tab focus, blocked-tab recovery, and duplicate prevention passed.');
+
+assert.equal(deferred.length, 4);
+assert.ok(deferred.every(({delay}) => delay === 750));
+calls.length = 0;
+deferred.at(-1).callback();
+assert.deepEqual(calls, ['', 'focus:Monty/Switch/']);
+console.log('Fresh-launch focus is repeated after asynchronous tab activation settles.');
