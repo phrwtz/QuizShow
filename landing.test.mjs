@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { games, createLauncher } from './landing.mjs';
 assert.deepEqual(games.map(game => game.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
+assert.deepEqual(games.map(game => game.name), ['Version 1', 'Version 2', 'Version 3', 'Version 4']);
 const calls = [];
 const handles = new Map();
 let block = true;

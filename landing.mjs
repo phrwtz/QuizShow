@@ -1,8 +1,8 @@
 export const games = [
-  { name: 'Monty / female', path: 'Monty/Switch/', target: 'quizshow-monty-female' },
-  { name: 'Monty / male', path: 'Monty/NoSwitch/', target: 'quizshow-monty-male' },
-  { name: 'Haunty / female', path: 'Haunty/Switch/', target: 'quizshow-haunty-female' },
-  { name: 'Haunty / male', path: 'Haunty/NoSwitch/', target: 'quizshow-haunty-male' }
+  { name: 'Version 1', path: 'Monty/Switch/', target: 'quizshow-monty-female' },
+  { name: 'Version 2', path: 'Monty/NoSwitch/', target: 'quizshow-monty-male' },
+  { name: 'Version 3', path: 'Haunty/Switch/', target: 'quizshow-haunty-female' },
+  { name: 'Version 4', path: 'Haunty/NoSwitch/', target: 'quizshow-haunty-male' }
 ];
 
 // All opens must happen synchronously inside the button's user gesture.
