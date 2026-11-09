@@ -20,7 +20,12 @@ export function createLauncher(openWindow) {
   }
   function focusFirst() {
     const first = tabs.get(games[0].target);
-    if (first && !first.closed) first.focus();
+    if (first && !first.closed) {
+      // Re-select the existing named tab through window.open: Chrome can
+      // finish queued new-tab activations after a plain first.focus().
+      const selected = openWindow('', games[0].target);
+      (selected || first).focus();
+    }
   }
   function start() {
     const blocked = games.filter(game => !openGame(game));
