@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { SELECTION_SCENE, SCENE_DURATION_MS, SCORE_DURATION_MS, nextScene, selectionImage, selectionSpeech } from './playback.mjs';
+import { SELECTION_SCENE, encoreImage, SCENE_DURATION_MS, SCORE_DURATION_MS, nextScene, selectionImage, selectionSpeech } from './playback.mjs';
 
 assert.equal(SCENE_DURATION_MS, 3000);
 assert.equal(SCORE_DURATION_MS, 6000);
@@ -18,6 +18,7 @@ for (const prize of ['goat', 'car']) {
 for (const host of ['monty', 'haunty']) {
   for (const contestant of ['female', 'male']) {
     assert.ok(existsSync(new URL(`./assets/concepts/${selectionImage(host, contestant)}`, import.meta.url)));
+    assert.ok(existsSync(new URL(`./assets/concepts/${encoreImage(host, contestant)}`, import.meta.url)));
     for (const door of [1, 2, 3]) assert.equal(selectionSpeech(door), `I want Door ${door}!`);
   }
 }

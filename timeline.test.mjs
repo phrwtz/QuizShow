@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createTimeline } from './timeline.mjs';
 import { createRound, roundWinner } from './game-logic.mjs';
 import { createTally } from './tally.mjs';
-import { nextScene, SCENE_DURATION_MS, SCORE_DURATION_MS } from './playback.mjs';
+import { nextScene, ENCORE_SCENE, SCENE_DURATION_MS, SCORE_DURATION_MS } from './playback.mjs';
 
 function simulation(host, contestant) {
   let time = 0;
@@ -23,7 +23,12 @@ function simulation(host, contestant) {
   function showScores() {
     tally.record(round, roundWinner(contestant, round));
     scores = true;
-    clock.schedule(start, SCORE_DURATION_MS);
+    clock.schedule(showEncore, SCORE_DURATION_MS);
+  }
+  function showEncore() {
+    scores = false;
+    index = ENCORE_SCENE;
+    clock.schedule(start, SCENE_DURATION_MS);
   }
   start();
   return {
@@ -42,12 +47,26 @@ for (const host of ['monty', 'haunty']) {
     for (let time = 250; time <= hour; time += 250) active.runUntil(time);
     background.runUntil(hour);
     assert.deepEqual(background.state(), active.state());
-    assert.ok(background.state().counts.games >= 100);
+    assert.ok(background.state().counts.games >= 90);
     assert.equal(background.state().counts.games, Object.entries(background.state().counts).filter(([key]) => key !== 'games').reduce((sum, [, value]) => sum + value, 0));
     if (host === 'monty') assert.equal(background.state().counts.host, 0);
     // Multiple days of suspension must survive the bounded catch-up batches.
     background.runUntil(72 * hour);
-    assert.ok(background.state().counts.games >= 7200);
+    assert.ok(background.state().counts.games >= 6600);
   }
 }
 console.log('All four variants match active playback after an hour without timer callbacks and catch up across multi-day suspension.');
+
+for (const host of ['monty', 'haunty']) {
+  const sim = simulation(host, 'female');
+  let time = 0;
+  while (!sim.state().scores) sim.runUntil(time += 3000);
+  const counts = sim.state().counts;
+  sim.runUntil(time += SCORE_DURATION_MS);
+  assert.equal(sim.state().index, ENCORE_SCENE);
+  assert.equal(sim.state().scores, false);
+  assert.deepEqual(sim.state().counts, counts);
+  sim.runUntil(time += SCENE_DURATION_MS);
+  assert.equal(sim.state().index, 0);
+  assert.deepEqual(sim.state().counts, counts);
+}

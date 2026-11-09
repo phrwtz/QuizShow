@@ -1,4 +1,5 @@
 export const SELECTION_SCENE = 10;
+export const ENCORE_SCENE = 11;
 export const SCENE_DURATION_MS = 3000;
 export const SCORE_DURATION_MS = 6000;
 
@@ -16,4 +17,8 @@ export function nextScene(index, firstPrize) {
   if (index === 2) return SELECTION_SCENE;
   if (index === SELECTION_SCENE) return 3;
   return index === 5 && firstPrize === 'car' ? 9 : index + 1;
+}
+
+export function encoreImage(host, contestant) {
+  return `${host}-${contestant}-encore-v1.png`;
 }
