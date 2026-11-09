@@ -36,7 +36,7 @@ export function createLauncher(openWindow) {
 }
 
 if (typeof document !== 'undefined') {
-  const launcher = createLauncher((url, target) => window.open(url, target));
+  const launcher = createLauncher((url, target) => window.open(url ? `${url}?v=numbered-versions` : '', target));
   const help = document.querySelector('#launch-help');
   const message = document.querySelector('#launch-message');
   const remaining = document.querySelector('#remaining-games');
