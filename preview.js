@@ -138,10 +138,12 @@ function fitBalloon(text) {
   const speech = document.querySelector('#speech');
   if (index === ENCORE_SCENE) {
     bubble.setAttribute('stroke', '#17131a');
-    bubble.setAttribute('d', 'M 90 25 H 910 Q 975 25 975 90 V 240 Q 975 305 910 305 H 770 L 720 435 L 700 305 H 350 L 280 435 L 280 305 H 90 Q 25 305 25 240 V 90 Q 25 25 90 25 Z');
+    // End both tails above the hair/hat, with extra clearance for taller Haunty.
+    const hostTipY = host.value === 'haunty' ? 295 : 375;
+    bubble.setAttribute('d', `M 90 25 H 910 Q 975 25 975 90 V 195 Q 975 260 910 260 H 740 L 680 ${hostTipY} L 670 260 H 350 L 310 350 L 280 260 H 90 Q 25 260 25 195 V 90 Q 25 25 90 25 Z`);
     document.querySelector('#thought-trail').replaceChildren();
     speech.textContent = text;
-    Object.assign(speech.style, { left: '5%', top: '2.5%', width: '90%', height: '28%', fontSize: '7.5cqw' });
+    Object.assign(speech.style, { left: '5%', top: '2.5%', width: '90%', height: '23.5%', fontSize: '7.5cqw' });
     return;
   }
   if (index === SELECTION_SCENE) {
@@ -181,11 +183,12 @@ function fitBalloon(text) {
   const bottom = top + height;
   const radius = 28;
   const finalDoor = index === 8 ? finalOutcome(contestant.value, round).finalDoor : null;
+  // Pose-specific tips stop above the silhouette rather than reaching the mouth.
   const [tipX, tipY] = index === 8
-    ? [[398, 597, 797][finalDoor - 1] - 110, host.value === 'monty' ? 420 : 350]
-    : index === 7 ? [200, 407]
-    : index === 6 || index === 9 ? [round.openedDoor === 1 ? 750 : 460, 390]
-    : host.value === 'monty' ? [392, 426] : [333, 290];
+    ? [[398, 597, 797][finalDoor - 1] - 170, 240]
+    : index === 7 ? [160, contestant.value === 'female' ? 250 : 280]
+    : index === 6 || index === 9 ? [round.openedDoor === 1 ? 730 : 440, host.value === 'monty' ? 350 : 300]
+    : host.value === 'monty' ? [355, 320] : [315, 195];
   const base = Math.max(left + radius + 30, Math.min(right - radius - 30, tipX + 50));
   const thinking = index === 3 || index === 4 || (index === 5 && host.value === 'haunty');
   const tail = thinking ? '' : `H ${base + 25} L ${tipX} ${tipY} L ${base - 25} ${bottom}`;
