@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { games, createLauncher } from './landing.mjs';
-assert.deepEqual(games.map(game => game.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
+assert.deepEqual(games.map(game => game.path), ['Haunty/NoSwitch/', 'Haunty/Switch/', 'Monty/NoSwitch/', 'Monty/Switch/']);
 assert.deepEqual(games.map(game => game.name), ['Version 1', 'Version 2', 'Version 3', 'Version 4']);
 const calls = [];
 const handles = new Map();
@@ -25,5 +25,5 @@ assert.deepEqual(calls, []);
 handles.get(games[2].target).closed = true;
 calls.length = 0;
 launcher.start();
-assert.deepEqual(calls, ['Haunty/Switch/']);
+assert.deepEqual(calls, [games[2].path]);
 console.log('Launch order, blocked-tab recovery, and duplicate prevention passed without focus or navigation side effects.');

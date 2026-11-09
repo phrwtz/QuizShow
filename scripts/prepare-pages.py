@@ -18,7 +18,7 @@ for host in ['Monty', 'Haunty']:
         folder.mkdir(parents=True, exist_ok=True)
         page = source.replace('<head>', '<head>\n  <base href="../../">', 1)
         page = page.replace('<body>', f'<body data-fixed-host="{host.lower()}" data-fixed-contestant="{contestant}">', 1)
-        page = page.replace("Let's Win a Car — opening dialogue", f"Version {1 + (2 if host == 'Haunty' else 0) + (1 if strategy == 'NoSwitch' else 0)}")
+        page = page.replace("Let's Win a Car — opening dialogue", f"Version {4 - (2 if host == 'Haunty' else 0) - (1 if strategy == 'NoSwitch' else 0)}")
         page = page.replace('src="preview.js"', f'src="display-runtime.mjs?v={revision}"')
         page = page.replace('href="preview.css"', f'href="preview.css?v={revision}"')
         page = page.replace('<p id="game-intro"></p>', '<p id="game-intro">' + html.escape(copy['intro']) + '</p>')

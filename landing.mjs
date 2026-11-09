@@ -1,8 +1,8 @@
 export const games = [
-  { name: 'Version 1', path: 'Monty/Switch/', target: 'quizshow-monty-female' },
-  { name: 'Version 2', path: 'Monty/NoSwitch/', target: 'quizshow-monty-male' },
-  { name: 'Version 3', path: 'Haunty/Switch/', target: 'quizshow-haunty-female' },
-  { name: 'Version 4', path: 'Haunty/NoSwitch/', target: 'quizshow-haunty-male' }
+  { name: 'Version 1', path: 'Haunty/NoSwitch/', target: 'quizshow-haunty-male' },
+  { name: 'Version 2', path: 'Haunty/Switch/', target: 'quizshow-haunty-female' },
+  { name: 'Version 3', path: 'Monty/NoSwitch/', target: 'quizshow-monty-male' },
+  { name: 'Version 4', path: 'Monty/Switch/', target: 'quizshow-monty-female' }
 ];
 
 // All opens must happen synchronously inside the button's user gesture.
@@ -25,7 +25,7 @@ export function createLauncher(openWindow) {
 }
 
 if (typeof document !== 'undefined') {
-  const launcher = createLauncher((url, target) => window.open(url ? `${url}?v=numbered-versions` : '', target));
+  const launcher = createLauncher((url, target) => window.open(url ? `${url}?v=monty-last` : '', target));
   const help = document.querySelector('#launch-help');
   const message = document.querySelector('#launch-message');
   const remaining = document.querySelector('#remaining-games');

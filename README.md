@@ -1,6 +1,6 @@
 # QuizShow — Let's Win a Car
 
-The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Monty/female, Monty/male, Haunty/female, and Haunty/male in that order, labeled Version 1 through Version 4. Select Version 1 manually after starting. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
+The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Haunty/male, Haunty/female, Monty/male, and Monty/female in that order, labeled Version 1 through Version 4. Monty/Switch (Version 4) opens last, so Chrome initially shows the familiar Monty Hall host. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
 
 The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check launch order, blocked-tab recovery, and duplicate prevention.
 
@@ -8,10 +8,10 @@ Four silent, automatically repeating display versions share the same code and ar
 
 | Version | Host | Contestant behavior | URL |
 | --- | --- | --- | --- |
-| Monty / Switch | Monty Hall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Monty/Switch/ |
-| Monty / NoSwitch | Monty Hall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Monty/NoSwitch/ |
-| Haunty / Switch | Haunty Mall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Haunty/Switch/ |
-| Haunty / NoSwitch | Haunty Mall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Haunty/NoSwitch/ |
+| 4 — Monty / Switch | Monty Hall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Monty/Switch/ |
+| 3 — Monty / NoSwitch | Monty Hall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Monty/NoSwitch/ |
+| 2 — Haunty / Switch | Haunty Mall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Haunty/Switch/ |
+| 1 — Haunty / NoSwitch | Haunty Mall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Haunty/NoSwitch/ |
 
 The square scene uses the shorter viewport dimension. The text area is to its left in landscape and above it in portrait, with a centered title and left-aligned introductory and variant paragraphs. Text scales to fit the available area. Display versions hide review controls and ignore pairing query parameters.
 
