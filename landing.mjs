@@ -21,10 +21,8 @@ export function createLauncher(openWindow, defer = setTimeout) {
   function focusFirst() {
     const first = tabs.get(games[0].target);
     if (first && !first.closed) {
-      // Re-select the existing named tab through window.open: Chrome can
-      // finish queued new-tab activations after a plain first.focus().
-      const selected = openWindow('', games[0].target);
-      (selected || first).focus();
+      // Focusing must never navigate a page or create another tab.
+      first.focus();
     }
   }
   function start() {
