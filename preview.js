@@ -185,7 +185,7 @@ function fitBalloon(text) {
   const finalDoor = index === 8 ? finalOutcome(contestant.value, round).finalDoor : null;
   // Pose-specific tips stop above the silhouette rather than reaching the mouth.
   const [tipX, tipY] = index === 8
-    ? [[398, 597, 797][finalDoor - 1] - 170, 240]
+    ? [finalDoor === 1 ? 758 : [398, 597, 797][finalDoor - 1] - 170, 240]
     : index === 7 ? [160, contestant.value === 'female' ? 250 : 280]
     : index === 6 || index === 9 ? [round.openedDoor === 1 ? 730 : 440, host.value === 'monty' ? 350 : 300]
     : host.value === 'monty' ? [355, 320] : [315, 195];
@@ -198,7 +198,7 @@ function fitBalloon(text) {
   trail.replaceChildren();
   if (thinking) {
     const head = index === 5
-      ? [[398, 597, 797][round.openedDoor - 1] - 110, 240]
+      ? [round.openedDoor === 1 ? 758 : [398, 597, 797][round.openedDoor - 1] - 110, 240]
       : host.value === 'monty' ? [320, 330] : [300, 210];
     // A trail of decreasing bubbles, ending just above the host's head.
     for (const [fraction, size] of [[0.25, 15], [0.55, 10], [0.82, 6]]) {
@@ -287,6 +287,11 @@ function render() {
     const asking = index === 6 || index === 7 || index === 9;
     hostImage.src = `assets/reveal/${host.value}-${index === 9 ? 'apology' : asking ? 'asking' : 'opening'}-v1.png`;
     hostImage.classList.toggle('asking', asking);
+    // Door 1 leaves no room between the foreground contestant and its left edge.
+    // Open it from the right so the host and contestant silhouettes stay separate.
+    const hostDoor = index === 8 ? finalOutcome(contestant.value, round).finalDoor : round.openedDoor;
+    hostImage.classList.toggle('opening-right', !asking && hostDoor === 1);
+    document.querySelector('#reveal').dataset.openedDoor = round.openedDoor;
     hostImage.style.left = asking ? (round.openedDoor === 1 ? '57%' : '28%') : '';
     hostImage.alt = index === 9 ? 'Haunty facing the contestant and apologizing' : asking ? 'Host facing the contestant and asking about switching' : 'Host holding the opened door';
     document.querySelector('#opened-number').textContent = round.openedDoor;
@@ -300,6 +305,7 @@ function render() {
   if (index === 8) {
     const position = `${[39.8, 59.7, 79.7][result.finalDoor - 1]}%`;
     document.querySelector('#final-door').style.setProperty('--door-left', position);
+    document.querySelector('#final-door').dataset.door = result.finalDoor;
     reveal.style.setProperty('--host-door-left', position);
     document.querySelector('#final-number').textContent = result.finalDoor;
     const prize = document.querySelector('#final-prize');
