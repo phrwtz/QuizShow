@@ -1,0 +1,24 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; }
+body { background: #263e7e; color: #fff4ca; font-family: Arial, sans-serif; }
+.welcome { position: relative; width: 100%; height: 100dvh; min-height: 320px; overflow: hidden; isolation: isolate; }
+.welcome-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: -1; }
+h1 { position: absolute; inset: 0 0 auto; height: 34%; margin: 0; }
+h1 svg { display: block; width: 100%; height: 100%; overflow: visible; }
+h1 text { font: 900 91px Arial, sans-serif; fill: #fff9d6; stroke: #e7ad37; stroke-width: 2px; paint-order: stroke fill; filter: drop-shadow(0 0 4px #fff7aa) drop-shadow(0 0 10px #ffeb78) drop-shadow(0 0 20px #ffce45); }
+#start-game { position: absolute; bottom: max(4%, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); border: 3px solid #fff5ba; border-radius: 999px; padding: .32em 1.2em .4em; color: #42244a; background: linear-gradient(#fff6bd, #ffd46a 65%, #e5a934); font: 900 clamp(26px, 3.2vw, 48px)/1.2 Arial, sans-serif; white-space: nowrap; box-shadow: 0 5px 0 #9c602a, 0 8px 22px #19163088, 0 0 24px #ffd65c88; cursor: pointer; }
+#start-game:hover { background: linear-gradient(#fffbe0, #ffe28c 65%, #f2bd4a); box-shadow: 0 5px 0 #9c602a, 0 8px 22px #19163088, 0 0 34px #ffe58ccc; }
+#start-game:active { margin-bottom: -3px; box-shadow: 0 2px 0 #9c602a, 0 0 24px #ffd65c88; }
+#start-game:focus-visible, .launch-help a:focus-visible { outline: 4px solid white; outline-offset: 7px; }
+.launch-help { position: absolute; bottom: 19%; left: 50%; transform: translateX(-50%); width: min(90%, 650px); padding: 18px 24px; border: 2px solid #f1cc74; border-radius: 16px; background: #142044f5; color: #fff6db; font-size: clamp(16px, 1.3vw, 20px); text-align: center; box-shadow: 0 8px 30px #0006; }
+.launch-help p { margin: 0; }
+.launch-help nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px; margin-top: 12px; }
+.launch-help a { color: #ffe28c; font-weight: bold; }
+[hidden] { display: none !important; }
+@media (max-aspect-ratio: 1/1) {
+  .welcome { background: linear-gradient(#283f7e 15%, #314988 50%, #6d4b78 78%, #32274d); }
+  .welcome-art { object-fit: contain; }
+  h1 { top: 6%; height: 27%; }
+  #start-game { bottom: max(8%, env(safe-area-inset-bottom)); font-size: clamp(30px, 6vw, 48px); }
+  .launch-help { bottom: 24%; }
+}

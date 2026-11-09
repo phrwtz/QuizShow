@@ -3,65 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Let's Win a Car — opening dialogue</title>
-  <link rel="stylesheet" href="preview.css">
+  <meta name="theme-color" content="#213776">
+  <title>Welcome to Let's Win a Car!</title>
+  <link rel="stylesheet" href="landing.css?v=1">
 </head>
 <body>
-  <main class="scene" aria-label="Game show opening scene">
-    <img id="art" alt="Host facing the contestant with three closed prize doors behind him">
-    <div id="door-glow" hidden aria-label="Selected door"></div>
-    <div id="reveal" hidden>
-      <div id="prize-bay" class="prize-bay"><img id="prize" alt=""></div>
-      <div id="opened-panel" class="opened-panel"><span id="opened-number"></span><i></i></div>
-      <div id="final-door" hidden>
-        <div class="prize-bay"><img id="final-prize" alt=""></div>
-        <div class="opened-panel"><span id="final-number"></span><i></i></div>
-      </div>
-      <img id="opening-host" alt="Host holding the opened door">
-      <img id="foreground-contestant" alt="" aria-hidden="true">
-    </div>
-    <div class="balloon" role="status" aria-live="polite">
-      <svg viewBox="0 0 1000 1000" aria-hidden="true">
-        <path id="bubble" fill="white" stroke="#17131a" stroke-width="4" stroke-linejoin="round"/>
-        <g id="thought-trail" fill="white" stroke="#17131a" stroke-width="3"></g>
+  <main class="welcome">
+    <img class="welcome-art" src="assets/concepts/welcome-cast-v1.png" alt="Monty, Haunty, and both superhero contestants smiling in front of three closed prize doors">
+    <h1 aria-label="Welcome to Let's Win a Car!">
+      <svg viewBox="0 0 1600 350" aria-hidden="true">
+        <defs><path id="welcome-arc" d="M 70 310 Q 800 -100 1530 310"/></defs>
+        <text><textPath href="#welcome-arc" startOffset="50%" text-anchor="middle">Welcome to Let's Win a Car!</textPath></text>
       </svg>
-      <div id="speech"></div>
-    </div>
-    <section id="scores" hidden aria-label="Results so far">
-      <h2>Results so far</h2>
-      <p>Games played: <strong id="games-played">0</strong></p>
-      <table><tbody>
-        <tr><th scope="row">Contestant wins</th><td id="contestant-wins">0</td></tr>
-        <tr><th scope="row" id="host-name">Host wins</th><td id="host-wins">0</td></tr>
-        <tr><th scope="row">Nobody wins</th><td id="nobody-wins">0</td></tr>
-      </tbody></table>
+    </h1>
+    <button id="start-game" type="button">Start Game!</button>
+    <section id="launch-help" class="launch-help" hidden aria-live="polite" aria-label="Opening game tabs">
+      <p id="launch-message"></p>
+      <nav id="remaining-games" aria-label="Open remaining games"></nav>
     </section>
+    <noscript><p class="launch-help">Please enable JavaScript to open the four game tabs.</p></noscript>
   </main>
-  <aside>
-    <div class="display-copy">
-      <h1>Let’s Win a Car</h1>
-      <p id="game-intro"></p>
-      <p id="variant-description"></p>
-    </div>
-    <div class="review-controls">
-    <p id="display-condition"></p>
-    <p>Dialogue and host thoughts preview</p>
-    <label>Host <select id="host"><option value="monty">Monty Hall</option><option value="haunty">Haunty Mall</option></select></label>
-    <label>Contestant <select id="contestant"><option value="female">Female superhero</option><option value="male">Male superhero</option></select></label>
-    <label>Selected door <select id="door"><option value="random">Random</option><option value="1">Door 1</option><option value="2">Door 2</option><option value="3">Door 3</option></select></label>
-    <label>Car location <select id="car-door"><option value="random">Random</option><option value="1">Door 1</option><option value="2">Door 2</option><option value="3">Door 3</option></select></label>
-    <p id="progress"></p>
-    <div class="buttons"><button id="replay">Replay</button><button id="pause">Pause</button><button id="next">Next balloon</button></div>
-    <button id="thoughts">Preview host thoughts</button>
-    <button id="encore">Preview “Let’s try that again!”</button>
-    <button id="selection">Preview contestant selection</button>
-    <button id="open-door">Preview door reveal</button>
-    <button id="switch-question">Preview switch question</button>
-    <button id="final-reveal">Preview final reveal</button>
-    <button id="apology">Preview Haunty’s apology</button>
-    <p class="note">Three seconds per scene; six seconds for cumulative results. After the reply, the host opens the contestant's final door. If Haunty reveals the car first, his awkward thought is followed by an apology to the losing contestant. The last scene stays visible. No sound.</p>
-    </div>
-  </aside>
-  <script type="module" src="preview.js"></script>
+  <script type="module" src="landing.mjs?v=1"></script>
 </body>
 </html>

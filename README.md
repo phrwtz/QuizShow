@@ -1,5 +1,9 @@
 # QuizShow — Let's Win a Car
 
+The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Monty/female, Monty/male, Haunty/female, and Haunty/male in that order, then focuses Monty/female. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
+
+The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check launch order, focus, and blocked-tab recovery.
+
 Four silent, automatically repeating display versions share the same code and artwork:
 
 | Version | Host | Contestant behavior | URL |
@@ -17,14 +21,14 @@ After each result, a six-second results screen shows games played, Contestant wi
 
 In the repository's Settings → Pages, choose **Deploy from a branch**, **main**, **/(root)**, then Save. No build system is required; `.nojekyll` enables direct static hosting. This project's four URLs require the exact capitalization shown above.
 
-For local preview, run `python3 -m http.server 8000` and open a version path or `/` for the editable review page. After editing the root HTML, run `python3 scripts/prepare-pages.py` to regenerate the four display pages. Run `node game-logic.test.mjs` for exhaustive door-choice and outcome checks.
+For local preview, run `python3 -m http.server 8000` and open a version path or `/review.html` for the editable review page. After editing `review.html`, run `python3 scripts/prepare-pages.py` to regenerate the four display pages. Run `node game-logic.test.mjs` for exhaustive door-choice and outcome checks.
 
 The artwork uses illustrated poses and live balloon/reveal/glow overlays; continuous camera and character motion is not yet implemented. After the host invitation, the reverse-angle selection shot shows the contestant pointing and announcing the chosen door. Its number matches the round’s actual random choice.
 
 ## Review-page details
 
 
-Run `python3 -m http.server 8000` in this folder, then open http://localhost:8000.
+Run `python3 -m http.server 8000` in this folder, then open http://localhost:8000/review.html.
 
 Choose either host and contestant. Each scene lasts three seconds. After the opening invitation, the contestant faces the camera, points, and announces the selected door. The view returns to the host, who turns toward the doors and shows two thought balloons. Each thought lasts 3,000 milliseconds, followed by a door reveal. A first car reveal ends play: Haunty thinks “This is awkward!” for three seconds, then faces the slumped contestant and says “Sorry about that...” in a persistent final scene. A goat reveal lasts three seconds, then the host asks about switching for three seconds, followed by the contestant reply for three seconds, then the final chosen door opens and stays for review. The original goat reveal remains visible. The selected closed door pulses. Choose a door explicitly or let the preview choose randomly. The Preview host thoughts button skips the opening, Preview door reveal jumps directly to the reveal, and Preview switch question skips to the question when a goat was revealed. Car location and selected door can be forced or randomized. The same timing is used for both hosts. Replay, pause/resume and next-balloon controls support review. Query parameters `host=monty|haunty` and `contestant=female|male` select a pairing for separate tabs.
 

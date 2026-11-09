@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import { games, createLauncher } from './landing.mjs';
+assert.deepEqual(games.map(game => game.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
+const calls = [];
+const handles = new Map();
+let block = true;
+const launcher = createLauncher((path, target) => {
+  calls.push(path);
+  if (block && path !== games[0].path) return null;
+  const tab = { closed: false, focus: () => calls.push(`focus:${path}`) };
+  handles.set(target, tab);
+  return tab;
+});
+assert.deepEqual(launcher.start(), games.slice(1));
+assert.deepEqual(calls, [...games.map(g => g.path), 'focus:Monty/Switch/']);
+block = false;
+calls.length = 0;
+assert.deepEqual(launcher.start(), []);
+assert.deepEqual(calls, [...games.slice(1).map(g => g.path), 'focus:Monty/Switch/']);
+calls.length = 0;
+launcher.start();
+assert.deepEqual(calls, ['focus:Monty/Switch/']);
+handles.get(games[2].target).closed = true;
+calls.length = 0;
+launcher.start();
+assert.deepEqual(calls, ['Haunty/Switch/', 'focus:Monty/Switch/']);
+console.log('Launch order, first-tab focus, blocked-tab recovery, and duplicate prevention passed.');
