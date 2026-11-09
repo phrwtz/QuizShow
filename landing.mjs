@@ -8,7 +8,7 @@ export const games = [
 // All opens must happen synchronously inside the button's user gesture.
 // Named tabs and retained handles let a blocked launch be retried without
 // duplicating or reloading games that already opened.
-export function createLauncher(openWindow, defer = setTimeout) {
+export function createLauncher(openWindow) {
   const tabs = new Map();
   function openGame(game) {
     let tab = tabs.get(game.target);
@@ -18,29 +18,10 @@ export function createLauncher(openWindow, defer = setTimeout) {
     }
     return tab;
   }
-  function focusFirst() {
-    const first = tabs.get(games[0].target);
-    if (first && !first.closed) {
-      // Focusing must never navigate a page or create another tab.
-      first.focus();
-    }
-  }
   function start() {
-    const blocked = games.filter(game => !openGame(game));
-    const first = tabs.get(games[0].target);
-    if (first && !first.closed) {
-      // This stays in the Start click: a real URL selects the existing named
-      // game without the empty-URL navigation back to the welcome document.
-      const selected = openWindow(games[0].path, games[0].target);
-      if (selected) tabs.set(games[0].target, selected);
-    }
-    focusFirst();
-    // New tabs activate asynchronously in Chrome. Select Version 1 again
-    // after those activation requests have settled, including on a fresh launch.
-    defer(focusFirst, 750);
-    return blocked;
+    return games.filter(game => !openGame(game));
   }
-  return { start, openGame, focusFirst };
+  return { start, openGame };
 }
 
 if (typeof document !== 'undefined') {
@@ -65,7 +46,6 @@ if (typeof document !== 'undefined') {
           link.remove();
           if (!remaining.children.length) {
             help.hidden = true;
-            launcher.focusFirst();
           }
         }
       });

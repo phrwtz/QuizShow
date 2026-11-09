@@ -1,8 +1,8 @@
 # QuizShow — Let's Win a Car
 
-The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Monty/female, Monty/male, Haunty/female, and Haunty/male in that order, then focuses Monty/female. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
+The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Monty/female, Monty/male, Haunty/female, and Haunty/male in that order, labeled Version 1 through Version 4. Select Version 1 manually after starting. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
 
-The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check launch order, focus, and blocked-tab recovery.
+The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check launch order, blocked-tab recovery, and duplicate prevention.
 
 Four silent, automatically repeating display versions share the same code and artwork:
 
