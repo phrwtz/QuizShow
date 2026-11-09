@@ -27,6 +27,13 @@ export function createLauncher(openWindow, defer = setTimeout) {
   }
   function start() {
     const blocked = games.filter(game => !openGame(game));
+    const first = tabs.get(games[0].target);
+    if (first && !first.closed) {
+      // This stays in the Start click: a real URL selects the existing named
+      // game without the empty-URL navigation back to the welcome document.
+      const selected = openWindow(games[0].path, games[0].target);
+      if (selected) tabs.set(games[0].target, selected);
+    }
     focusFirst();
     // New tabs activate asynchronously in Chrome. Select Version 1 again
     // after those activation requests have settled, including on a fresh launch.
