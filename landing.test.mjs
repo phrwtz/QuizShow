@@ -1,31 +1,34 @@
 import assert from 'node:assert/strict';
-import { games, createLauncher } from './landing.mjs';
-assert.deepEqual(games.map(game => game.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
-assert.deepEqual(games.map(game => game.name), ['Version 1', 'Version 2', 'Version 3', 'Version 4']);
-const calls = [];
-const handles = new Map();
-let block = true;
-let focusCalls = 0;
-const launcher = createLauncher((path, target) => {
-  calls.push(path);
-  if (handles.has(target) && !handles.get(target).closed) return handles.get(target);
-  if (block && path !== games[0].path) return null;
-  const tab = { closed: false };
-  handles.set(target, tab);
-  return tab;
-}, () => { focusCalls++; });
-assert.deepEqual(launcher.start(), games.slice(1));
-assert.deepEqual(calls, [...games.map(g => g.path)]);
-block = false;
-calls.length = 0;
-assert.deepEqual(launcher.start(), []);
-assert.deepEqual(calls, [...games.slice(1).map(g => g.path)]);
-calls.length = 0;
-launcher.start();
-assert.deepEqual(calls, []);
-handles.get(games[2].target).closed = true;
-calls.length = 0;
-launcher.start();
-assert.deepEqual(calls, [games[2].path]);
-assert.equal(focusCalls, 4, 'Every launch returns focus to the landing page');
-console.log('Launch order, blocked-tab recovery, and duplicate prevention passed and landing-page focus passed.');
+import { readFileSync } from 'node:fs';
+import { games, initializeLanding } from './landing.mjs';
+assert.deepEqual(games.map(g => g.name), ['Monty Female', 'Monty Male', 'Haunty Female', 'Haunty Male']);
+assert.deepEqual(games.map(g => g.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
+function fixture(state = null) {
+  const element = () => ({ hidden: false, children: [], events: {}, append(child) { this.children.push(child); }, addEventListener(type, fn) { this.events[type] = fn; } });
+  const nodes = Object.fromEntries(['#game-overview', '#game-grid', '#game-links', '.welcome', '#start-game'].map(id => [id, element()]));
+  nodes['#game-overview'].hidden = true;
+  const document = { querySelector: id => nodes[id], createElement: element };
+  const history = { state, replaceState(next) { this.state = next; } };
+  initializeLanding(document, history);
+  return { nodes, history };
+}
+const initial = fixture();
+assert.equal(initial.nodes['#game-grid'].children.length, 0);
+initial.nodes['#start-game'].events.click();
+assert.equal(initial.nodes['.welcome'].hidden, true);
+assert.equal(initial.nodes['#game-overview'].hidden, false);
+assert.equal(initial.history.state.overview, true);
+function checkOverview({ nodes }) {
+  assert.deepEqual(nodes['#game-grid'].children.map(f => f.src), games.map(g => g.path));
+  assert.deepEqual(nodes['#game-links'].children.map(a => [a.textContent, a.href, a.target]), games.map(g => [g.name, g.path, undefined]));
+}
+checkOverview(initial);
+initial.nodes['#start-game'].events.click();
+checkOverview(initial); // No duplicated frames or links.
+const restored = fixture(initial.history.state); // Back with a fresh document.
+assert.equal(restored.nodes['#game-overview'].hidden, false);
+checkOverview(restored);
+for (const game of games) {
+  assert.ok(readFileSync(`${game.path}index.html`, 'utf8').includes(`<title>${game.name}</title>`));
+}
+console.log('Overview launch, same-tab links, game titles, duplicate prevention, and Back restoration passed.');

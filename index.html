@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#213776">
   <title>Welcome to Let's Win a Car!</title>
-  <link rel="stylesheet" href="landing.css?v=3">
+  <link rel="stylesheet" href="landing.css?v=4">
 </head>
 <body>
   <main class="welcome">
@@ -17,18 +17,15 @@
       </svg>
     </h1>
     <button id="start-game" type="button">Start Game!</button>
-    <section id="launch-help" class="launch-help" hidden aria-live="polite" aria-label="Opening game tabs">
-      <p id="launch-message"></p>
-      <nav id="remaining-games" aria-label="Open remaining games"></nav>
-    </section>
-    <noscript><p class="launch-help">Please enable JavaScript to open the four game tabs.</p></noscript>
+    <noscript><p class="launch-help">Please enable JavaScript to view the four games.</p></noscript>
   </main>
   <main id="game-overview" class="game-overview" hidden aria-label="All four game versions">
     <aside class="overview-copy">
       <p>Four different versions of the Lets Win a Car game featuring two different contestants and two different game show hosts. Watch their behavior closely as they play the game over and over. Is it better to switch doors or stay with the one you've got?</p>
+      <nav id="game-links" class="game-links" aria-label="Choose a game"></nav>
     </aside>
     <section id="game-grid" class="game-grid" aria-label="Live games"></section>
   </main>
-  <script type="module" src="landing.mjs?v=11"></script>
+  <script type="module" src="landing.mjs?v=12"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 # QuizShow — Let's Win a Car
 
-The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Monty/female, Monty/male, Haunty/female, and Haunty/male in that order, labeled Version 1 through Version 4, and requests focus back on the landing page. Browser focus settings may override this request. After Start Game!, the welcome artwork becomes a live two-by-two square grid: Monty/female and Monty/male above Haunty/female and Haunty/male. Each tile has half the full scene’s side length and a 5-pixel border. Shared introductory text fills the remaining space to the left in landscape or above in portrait. The embedded games run independently of the separate tabs. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
+The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. Start Game shows a live two-by-two square grid without opening additional tabs: Monty Female and Monty Male above Haunty Female and Haunty Male. Each tile has half the full scene’s side length and a 5-pixel border. Shared introductory text fills the remaining space to the left in landscape or above in portrait. Four buttons below the text open the corresponding game in the current tab, with a matching browser-tab title. Browser Back returns to the tiled overview, including when the page must reload.
 
-The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check launch order, blocked-tab recovery, and duplicate prevention.
+The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check overview navigation and restoration.
 
 Four silent, automatically repeating display versions share the same code and artwork:
 
