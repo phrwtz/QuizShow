@@ -1,8 +1,8 @@
 export const games = [
-  { name: 'Monty Female', path: 'Monty/Switch/' },
-  { name: 'Monty Male', path: 'Monty/NoSwitch/' },
-  { name: 'Haunty Female', path: 'Haunty/Switch/' },
-  { name: 'Haunty Male', path: 'Haunty/NoSwitch/' }
+  { name: 'Monty Hall and Female Contestant', path: 'Monty/Switch/' },
+  { name: 'Monty Hall and Male Contestant', path: 'Monty/NoSwitch/' },
+  { name: 'Haunty Mall and Female Contestant', path: 'Haunty/Switch/' },
+  { name: 'Haunty Mall and Male Contestant', path: 'Haunty/NoSwitch/' }
 ];
 
 export function initializeLanding(document, history) {

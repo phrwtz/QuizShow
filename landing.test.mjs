@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { games, initializeLanding } from './landing.mjs';
-assert.deepEqual(games.map(g => g.name), ['Monty Female', 'Monty Male', 'Haunty Female', 'Haunty Male']);
+assert.deepEqual(games.map(g => g.name), ['Monty Hall and Female Contestant', 'Monty Hall and Male Contestant', 'Haunty Mall and Female Contestant', 'Haunty Mall and Male Contestant']);
 assert.deepEqual(games.map(g => g.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
 function fixture(state = null) {
   const element = () => ({ hidden: false, children: [], events: {}, append(child) { this.children.push(child); }, addEventListener(type, fn) { this.events[type] = fn; } });
