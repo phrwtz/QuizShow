@@ -29,12 +29,34 @@ if (typeof document !== 'undefined') {
   const help = document.querySelector('#launch-help');
   const message = document.querySelector('#launch-message');
   const remaining = document.querySelector('#remaining-games');
+  const overview = document.querySelector('#game-overview');
+  const grid = document.querySelector('#game-grid');
+  function showOverview() {
+    if (!overview.hidden) return;
+    // Row-major order: Monty/female, Monty/male, Haunty/female, Haunty/male.
+    for (const index of [3, 2, 1, 0]) {
+      const game = games[index];
+      const frame = document.createElement('iframe');
+      frame.title = `${game.name}: ${game.target.replace('quizshow-', '').replace('-', ' / ')}`;
+      frame.addEventListener('load', () => {
+        // The square tiles show the scene; the overview supplies shared copy.
+        const panel = frame.contentDocument?.querySelector('aside');
+        if (panel) panel.style.display = 'none';
+      });
+      frame.src = game.path;
+      grid.append(frame);
+    }
+    overview.hidden = false;
+    document.querySelector('.welcome').hidden = true;
+    overview.querySelector('.overview-copy').append(help);
+  }
   document.querySelector('#start-game').addEventListener('click', () => {
     const blocked = launcher.start();
+    showOverview();
     help.hidden = blocked.length === 0;
     remaining.replaceChildren();
     if (!blocked.length) return;
-    message.textContent = 'Your browser blocked some game tabs. Allow pop-ups for this site, then press Start Game! again, or open the remaining games below.';
+    message.textContent = 'Your browser blocked some game tabs. Allow pop-ups for this site, then open the remaining games below.';
     for (const game of blocked) {
       const link = document.createElement('a');
       link.href = game.path;
