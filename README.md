@@ -1,6 +1,6 @@
 # QuizShow — Let's Win a Car
 
-The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Haunty/male, Haunty/female, Monty/male, and Monty/female in that order, labeled Version 1 through Version 4. Monty/Switch (Version 4) opens last, so Chrome initially shows the familiar Monty Hall host. After Start Game!, the welcome artwork becomes a live two-by-two square grid: Monty/female and Monty/male above Haunty/female and Haunty/male. Each tile has half the full scene’s side length. Shared introductory text fills the remaining space to the left in landscape or above in portrait. The embedded games run independently of the separate tabs. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
+The [welcome page](https://phrwtz.github.io/QuizShow/) fills the screen with all four characters, a glowing curved title, and a Start Game! button. It opens Monty/female, Monty/male, Haunty/female, and Haunty/male in that order, labeled Version 1 through Version 4, and requests focus back on the landing page. Browser focus settings may override this request. After Start Game!, the welcome artwork becomes a live two-by-two square grid: Monty/female and Monty/male above Haunty/female and Haunty/male. Each tile has half the full scene’s side length and a 5-pixel border. Shared introductory text fills the remaining space to the left in landscape or above in portrait. The embedded games run independently of the separate tabs. Browsers that block multiple pop-ups get a retry message and individual game links. Named tabs are reused on retry.
 
 The editable scene review page is at `review.html`; it is also the source template used by the page preparation script. Run `node landing.test.mjs` to check launch order, blocked-tab recovery, and duplicate prevention.
 
@@ -8,10 +8,10 @@ Four silent, automatically repeating display versions share the same code and ar
 
 | Version | Host | Contestant behavior | URL |
 | --- | --- | --- | --- |
-| 4 — Monty / Switch | Monty Hall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Monty/Switch/ |
-| 3 — Monty / NoSwitch | Monty Hall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Monty/NoSwitch/ |
-| 2 — Haunty / Switch | Haunty Mall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Haunty/Switch/ |
-| 1 — Haunty / NoSwitch | Haunty Mall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Haunty/NoSwitch/ |
+| 1 — Monty / Switch | Monty Hall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Monty/Switch/ |
+| 2 — Monty / NoSwitch | Monty Hall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Monty/NoSwitch/ |
+| 3 — Haunty / Switch | Haunty Mall | Female superhero always switches | https://phrwtz.github.io/QuizShow/Haunty/Switch/ |
+| 4 — Haunty / NoSwitch | Haunty Mall | Male superhero always stays | https://phrwtz.github.io/QuizShow/Haunty/NoSwitch/ |
 
 The square scene uses the shorter viewport dimension. The text area is to its left in landscape and above it in portrait, with a centered title and left-aligned introductory and variant paragraphs. Text scales to fit the available area. Display versions hide review controls and ignore pairing query parameters.
 

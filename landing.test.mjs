@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { games, createLauncher } from './landing.mjs';
-assert.deepEqual(games.map(game => game.path), ['Haunty/NoSwitch/', 'Haunty/Switch/', 'Monty/NoSwitch/', 'Monty/Switch/']);
+assert.deepEqual(games.map(game => game.path), ['Monty/Switch/', 'Monty/NoSwitch/', 'Haunty/Switch/', 'Haunty/NoSwitch/']);
 assert.deepEqual(games.map(game => game.name), ['Version 1', 'Version 2', 'Version 3', 'Version 4']);
 const calls = [];
 const handles = new Map();
 let block = true;
+let focusCalls = 0;
 const launcher = createLauncher((path, target) => {
   calls.push(path);
   if (handles.has(target) && !handles.get(target).closed) return handles.get(target);
@@ -12,7 +13,7 @@ const launcher = createLauncher((path, target) => {
   const tab = { closed: false };
   handles.set(target, tab);
   return tab;
-});
+}, () => { focusCalls++; });
 assert.deepEqual(launcher.start(), games.slice(1));
 assert.deepEqual(calls, [...games.map(g => g.path)]);
 block = false;
@@ -26,4 +27,5 @@ handles.get(games[2].target).closed = true;
 calls.length = 0;
 launcher.start();
 assert.deepEqual(calls, [games[2].path]);
-console.log('Launch order, blocked-tab recovery, and duplicate prevention passed without focus or navigation side effects.');
+assert.equal(focusCalls, 4, 'Every launch returns focus to the landing page');
+console.log('Launch order, blocked-tab recovery, and duplicate prevention passed and landing-page focus passed.');

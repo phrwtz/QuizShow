@@ -26,7 +26,7 @@ h1 text { font: 900 91px Arial, sans-serif; fill: #fff9d6; stroke: #e7ad37; stro
 /* The full grid has the same square footprint as one full-size game. */
 .game-overview { display: flex; width: 100%; min-height: 100dvh; background: #131b33; }
 .game-grid { flex: none; width: min(100vw, 100dvh); height: min(100vw, 100dvh); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
-.game-grid iframe { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; border: 0; }
+.game-grid iframe { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; border: 5px solid #fff4ca; }
 .overview-copy { flex: 1; min-width: 0; align-self: center; padding: clamp(16px, 3vw, 48px); font-size: clamp(18px, 2.2vw, 36px); line-height: 1.5; }
 .overview-copy > p { margin: 0; }
 .overview-copy .launch-help { position: static; transform: none; width: 100%; margin-top: 24px; padding: 16px; }
